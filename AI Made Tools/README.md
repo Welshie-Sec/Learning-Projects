@@ -1,0 +1,1 @@
+Collection of tools I used AI to make to solve small various either productivity or workflow issues... mostly because I either don't like what's available or just cost too much for what I want to use them for.
