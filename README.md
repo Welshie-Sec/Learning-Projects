@@ -13,7 +13,7 @@ Not started (Concept)
 ## OpenVAS
 Not started (Concept)
 ## AI?
-Not sure, maybe some tools. Still working on the HackTheBox AI RedTeaming course.
+Not sure, maybe some tools. Still working on the HackTheBox AI Red-Teaming course.
 ## Cloud!
 Mostly fundamentals training for now. 
 Mostly focused on Azure as Sentinel and Entra feel like they cover a lot of infrastructure.
