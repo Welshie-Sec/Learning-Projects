@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Minimal Network Builder</title>
+    <style>
+        :root {
+            /* Dark Theme Colors */
+            --bg-color: #0f172a;       /* slate-900 */
+            --grid-color: #1e293b;     /* slate-800 */
+            --panel-bg: #1e293b;       /* slate-800 */
+            --text-main: #f8fafc;      /* slate-50 */
+            --text-muted: #94a3b8;     /* slate-400 */
+            --primary: #3b82f6;        /* blue-500 */
+            --primary-hover: #60a5fa;  /* blue-400 */
+            --danger: #ef4444;         /* red-500 */
+            --border: #334155;         /* slate-700 */
+            --node-bg: #1e293b;        /* slate-800 */
+            --node-border: #475569;    /* slate-600 */
+            --node-hover: #334155;     /* slate-700 */
+            --container-bg: rgba(51, 65, 85, 0.3); /* slate-700 transparent */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1 { font-size: 1.1rem; font-weight: 600; margin-right: 16px; color: var(--text-main); }
+
+        button {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover { background-color: var(--node-hover); border-color: var(--node-border); }
+
+        button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 1px solid var(--border);
+            padding-left: 16px;
+            margin-left: 8px;
+        }
+
+        input[type="text"] {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            width: 180px;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary); }
+        input[type="text"]:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 16px;
+            min-width: 250px;
+        }
+
+        main {
+            flex: 1;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Container Styling */
+        .container-group { cursor: grab; }
+        .container-group:active { cursor: grabbing; }
+        .container-rect {
+            fill: var(--container-bg);
+            stroke: var(--border);
+            stroke-width: 2;
+            stroke-dasharray: 6 4;
+            rx: 6;
+            transition: stroke 0.2s;
+        }
+        .container-name { font-size: 14px; font-weight: 600; fill: var(--text-muted); letter-spacing: 0.5px; }
+        .resize-handle { fill: var(--text-muted); cursor: nwse-resize; opacity: 0; transition: opacity 0.2s; }
+        .container-group:hover .resize-handle, .container-group.selected .resize-handle { opacity: 1; }
+        .container-group.selected .container-rect { stroke: var(--primary); }
+
+        /* Node Styling */
+        .node-rect {
+            fill: var(--node-bg);
+            stroke: var(--node-border);
+            stroke-width: 2;
+            rx: 8;
+            transition: fill 0.2s, stroke 0.2s;
+        }
+        .node-group { cursor: grab; }
+        .node-group:active { cursor: grabbing; }
+        .node-group:hover .node-rect { fill: var(--node-hover); }
+        .node-group.selected .node-rect {
+            stroke: var(--primary);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+        }
+        .node-name { font-size: 13px; font-weight: 500; fill: var(--text-main); text-anchor: middle; }
+        
+        /* Line Styling */
+        .link-path {
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            opacity: 0.6;
+        }
+        .link-hitbox {
+            fill: none;
+            stroke: transparent;
+            stroke-width: 16; /* Thick invisible area to make clicking lines easy */
+            cursor: pointer;
+        }
+        .link-hitbox:hover + .link-path { stroke: var(--text-main); opacity: 1; }
+        
+        /* The path immediately following a selected hitbox gets styled */
+        .link-hitbox.selected + .link-path {
+            stroke: var(--danger);
+            opacity: 1;
+            filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
+        }
+
+        .link-preview {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-dasharray: 6 4;
+            pointer-events: none;
+        }
+        
+        .connect-mode-active { cursor: crosshair !important; }
+        .connect-mode-active .node-group { cursor: crosshair; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="toolbar-group">
+            <h1>NetworkMap</h1>
+            <button onclick="addContainer()">+ Container</button>
+            <button onclick="addNode('Cloud')">+ Cloud</button>
+            <button onclick="addNode('Router')">+ Router</button>
+            <button onclick="addNode('Switch')">+ Switch</button>
+            <button onclick="addNode('Server')">+ Server</button>
+            <button onclick="addNode('Firewall')">+ Firewall</button>
+            <button onclick="addNode('Client')">+ Client</button>
+            
+            <div class="input-group">
+                <button id="btnConnect" onclick="toggleConnectMode()">🔗 Link Mode</button>
+            </div>
+        </div>
+
+        <div class="toolbar-group">
+            <span id="instructionHint" class="hint">Click line/node to edit. DEL to remove.</span>
+            <input type="text" id="nameInput" placeholder="Name..." disabled oninput="updateItemName(this.value)">
+            <button onclick="undo()" style="margin-left: 8px;" title="Undo last action">↶ Undo</button>
+            <button onclick="clearMap()" style="color: var(--danger); border-color: var(--danger); background: transparent;">Clear</button>
+        </div>
+    </header>
+
+    <main id="canvasContainer">
+        <svg id="networkCanvas">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="var(--grid-color)"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" class="bg-grid" />
+            <g id="containersLayer"></g>
+            <g id="linksLayer"></g>
+            <g id="previewLayer"></g>
+            <g id="nodesLayer"></g>
+        </svg>
+    </main>
+
+    <script>
+        // State Arrays
+        let nodes = [];
+        let links = [];
+        let containers = [];
+        let history = [];
+
+        // Canvas Config
+        const nodeWidth = 100;
+        const nodeHeight = 80;
+        const gridSize = 40;
+
+        // Interaction State
+        let selection = { type: null, id: null }; // type: 'node', 'link', 'container'
+        
+        let dragType = null; // 'node', 'container', 'resize'
+        let draggingItem = null;
+        let dragOffset = { x: 0, y: 0 };
+        
+        let isConnectMode = false;
+        let isConnecting = false;
+        let connectStartNode = null;
+        let mousePos = { x: 0, y: 0 };
+
+        // DOM Elements
+        const canvas = document.getElementById('networkCanvas');
+        const containersLayer = document.getElementById('containersLayer');
+        const nodesLayer = document.getElementById('nodesLayer');
+        const linksLayer = document.getElementById('linksLayer');
+        const previewLayer = document.getElementById('previewLayer');
+        const nameInput = document.getElementById('nameInput');
+        const btnConnect = document.getElementById('btnConnect');
+        const hint = document.getElementById('instructionHint');
+
+        // --- Unique Icons & Colors ---
+        const typeStyles = {
+            Cloud: {
+                svg: `<path d="M70 35a10 10 0 0 0-9.5-6.7c-.5-5.3-5-9.3-10.5-9.3-5.5 0-10 4-10.5 9.3A10 10 0 0 0 30 35c0 5.5 4.5 10 10 10h30c5.5 0 10-4.5 10-10z" fill="none" stroke="#f8fafc" stroke-width="2"/>`
+            },
+            Router: {
+                svg: `<circle cx="50" cy="30" r="14" fill="none" stroke="#3b82f6" stroke-width="2"/><path d="M50 12 L50 20 M50 40 L50 48 M32 30 L40 30 M60 30 L68 30" stroke="#3b82f6" stroke-width="2"/>`
+            },
+            Switch: {
+                svg: `<rect x="35" y="20" width="30" height="20" rx="2" fill="none" stroke="#10b981" stroke-width="2"/><path d="M38 25 h24 M38 30 h24 M38 35 h24" stroke="#10b981" stroke-width="2"/>`
+            },
+            Server: {
+                svg: `<rect x="40" y="15" width="20" height="30" rx="2" fill="none" stroke="#8b5cf6" stroke-width="2"/><path d="M40 21 h20 M40 30 h20 M40 39 h20" stroke="#8b5cf6" stroke-width="1"/>`
+            },
+            Firewall: {
+                svg: `<path d="M35 18 v18 c0 6 15 12 15 12 s15 -6 15 -12 v-18 L50 12 Z" fill="none" stroke="#ef4444" stroke-width="2"/><path d="M42 22 l16 16 M42 32 l6 6" stroke="#ef4444" stroke-width="2"/>`
+            },
+            Client: {
+                svg: `<rect x="35" y="20" width="30" height="18" rx="2" fill="none" stroke="#06b6d4" stroke-width="2"/><path d="M46 38 h8 M38 42 h24" stroke="#06b6d4" stroke-width="2"/>`
+            }
+        };
+
+        // --- Core Functions ---
+
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        // --- Undo / State Management ---
+        function saveState() {
+            // Keep maximum of 30 undo steps
+            if(history.length > 30) history.shift();
+            // Deep copy state
+            history.push(JSON.stringify({ nodes, links, containers }));
+        }
+
+        function undo() {
+            if (history.length > 0) {
+                const prevState = JSON.parse(history.pop());
+                nodes = prevState.nodes;
+                links = prevState.links;
+                containers = prevState.containers;
+                selectItem(null, null); // Clear selection on undo
+                render();
+            }
+        }
+
+        // --- Adding Elements ---
+
+        function addNode(type) {
+            saveState();
+            const id = generateId();
+            const x = Math.floor((Math.random() * 300 + 100) / gridSize) * gridSize;
+            const y = Math.floor((Math.random() * 300 + 100) / gridSize) * gridSize;
+            
+            nodes.push({ id, type, name: `${type} 1`, x, y });
+            selectItem('node', id);
+        }
+
+        function addContainer() {
+            saveState();
+            const id = generateId();
+            const x = Math.floor((Math.random() * 200 + 50) / gridSize) * gridSize;
+            const y = Math.floor((Math.random() * 200 + 50) / gridSize) * gridSize;
+            
+            containers.push({ id, x, y, w: 240, h: 200, name: 'VPC / Cluster' });
+            selectItem('container', id);
+        }
+
+        // --- Selection & Editing ---
+
+        function selectItem(type, id) {
+            selection = { type, id };
+            
+            if (type === 'node' || type === 'container') {
+                const arr = type === 'node' ? nodes : containers;
+                const item = arr.find(i => i.id === id);
+                nameInput.value = item ? item.name : '';
+                nameInput.disabled = false;
+                nameInput.focus();
+            } else {
+                nameInput.value = '';
+                nameInput.disabled = true;
+            }
+            render();
+        }
+
+        function updateItemName(newName) {
+            if (!selection.id) return;
+            const arr = selection.type === 'node' ? nodes : containers;
+            const item = arr.find(i => i.id === selection.id);
+            if (item) {
+                item.name = newName;
+                render();
+            }
+        }
+
+        function deleteSelected() {
+            if (!selection.id) return;
+            saveState();
+            
+            if (selection.type === 'node') {
+                // Remove links attached to this node
+                links = links.filter(l => l.source !== selection.id && l.target !== selection.id);
+                // Remove node
+                nodes = nodes.filter(n => n.id !== selection.id);
+            } else if (selection.type === 'link') {
+                links = links.filter(l => l.id !== selection.id);
+            } else if (selection.type === 'container') {
+                containers = containers.filter(c => c.id !== selection.id);
+            }
+            
+            selectItem(null, null);
+        }
+
+        function clearMap() {
+            if(confirm("Are you sure you want to clear the diagram?")) {
+                saveState();
+                nodes = [];
+                links = [];
+                containers = [];
+                selectItem(null, null);
+            }
+        }
+
+        // --- Interaction Logic ---
+
+        function toggleConnectMode() {
+            isConnectMode = !isConnectMode;
+            btnConnect.classList.toggle('active', isConnectMode);
+            canvas.classList.toggle('connect-mode-active', isConnectMode);
+            isConnecting = false;
+            connectStartNode = null;
+            previewLayer.innerHTML = '';
+            
+            if (isConnectMode) {
+                selectItem(null, null);
+                hint.textContent = "Click and drag from one node to another to link them.";
+            } else {
+                hint.textContent = "Click line/node to edit. DEL to remove.";
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mousePos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+
+            // 1. Check Resize Handle (Containers)
+            const resizeHandle = e.target.closest('.resize-handle');
+            if (resizeHandle && !isConnectMode) {
+                saveState();
+                const containerId = resizeHandle.closest('.container-group').getAttribute('data-id');
+                draggingItem = containers.find(c => c.id === containerId);
+                dragType = 'resize';
+                selectItem('container', containerId);
+                return;
+            }
+
+            // 2. Check Nodes
+            const nodeTarget = e.target.closest('.node-group');
+            if (nodeTarget) {
+                const id = nodeTarget.getAttribute('data-id');
+                const node = nodes.find(n => n.id === id);
+                
+                if (isConnectMode) {
+                    isConnecting = true;
+                    connectStartNode = node;
+                } else {
+                    saveState();
+                    draggingItem = node;
+                    dragType = 'node';
+                    dragOffset.x = mousePos.x - draggingItem.x;
+                    dragOffset.y = mousePos.y - draggingItem.y;
+                    selectItem('node', id);
+                }
+                return;
+            }
+
+            // 3. Check Containers (Body drag)
+            const containerTarget = e.target.closest('.container-group');
+            if (containerTarget && !isConnectMode) {
+                saveState();
+                const id = containerTarget.getAttribute('data-id');
+                draggingItem = containers.find(c => c.id === id);
+                dragType = 'container';
+                dragOffset.x = mousePos.x - draggingItem.x;
+                dragOffset.y = mousePos.y - draggingItem.y;
+                selectItem('container', id);
+                return;
+            }
+
+            // 4. Check Links
+            const linkTarget = e.target.closest('.link-hitbox');
+            if (linkTarget && !isConnectMode) {
+                const id = linkTarget.getAttribute('data-id');
+                selectItem('link', id);
+                return;
+            }
+
+            // 5. Background Click -> Deselect
+            if (e.target.classList.contains('bg-grid')) {
+                selectItem(null, null);
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mousePos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+
+            if (draggingItem && !isConnectMode) {
+                if (dragType === 'resize') {
+                    // Snap resizing to grid
+                    let rawW = mousePos.x - draggingItem.x;
+                    let rawH = mousePos.y - draggingItem.y;
+                    
+                    let newW = Math.round(rawW / (gridSize/2)) * (gridSize/2);
+                    let newH = Math.round(rawH / (gridSize/2)) * (gridSize/2);
+                    
+                    // Min width/height
+                    draggingItem.w = Math.max(newW, 100);
+                    draggingItem.h = Math.max(newH, 60);
+                } else {
+                    // Snap dragging to grid
+                    let rawX = mousePos.x - dragOffset.x;
+                    let rawY = mousePos.y - dragOffset.y;
+                    
+                    draggingItem.x = Math.round(rawX / (gridSize/2)) * (gridSize/2);
+                    draggingItem.y = Math.round(rawY / (gridSize/2)) * (gridSize/2);
+                }
+                render();
+            } else if (isConnecting && connectStartNode) {
+                renderPreviewLink();
+            }
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            if (isConnecting && connectStartNode) {
+                const target = e.target.closest('.node-group');
+                if (target) {
+                    const targetId = target.getAttribute('data-id');
+                    if (targetId && targetId !== connectStartNode.id) {
+                        // Check for duplicate links
+                        const exists = links.find(l => 
+                            (l.source === connectStartNode.id && l.target === targetId) ||
+                            (l.target === connectStartNode.id && l.source === targetId)
+                        );
+                        if (!exists) {
+                            saveState();
+                            links.push({ id: generateId(), source: connectStartNode.id, target: targetId });
+                        }
+                    }
+                }
+            }
+            draggingItem = null;
+            dragType = null;
+            isConnecting = false;
+            connectStartNode = null;
+            previewLayer.innerHTML = '';
+            render();
+        });
+
+        // --- Keyboard Shortcuts ---
+        window.addEventListener('keydown', (e) => {
+            // Delete key logic
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                if (document.activeElement !== nameInput) {
+                    deleteSelected();
+                }
+            }
+            // Escape mode cancels connecting and deselection
+            if (e.key === 'Escape') {
+                if (isConnectMode) toggleConnectMode();
+                selectItem(null, null);
+            }
+            // Standard Ctrl+Z for undo (optional ease-of-use)
+            if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+                undo();
+            }
+        });
+
+        // --- Rendering Engine ---
+
+        function getPath(x1, y1, x2, y2) {
+            return `M ${x1} ${y1} L ${x2} ${y2}`;
+        }
+
+        function renderPreviewLink() {
+            if (!connectStartNode) return;
+            const x1 = connectStartNode.x + nodeWidth / 2;
+            const y1 = connectStartNode.y + nodeHeight / 2;
+            const path = getPath(x1, y1, mousePos.x, mousePos.y);
+            previewLayer.innerHTML = `<path class="link-preview" d="${path}" />`;
+        }
+
+        function render() {
+            // 1. Render Containers (Back Layer)
+            let containersHTML = '';
+            containers.forEach(c => {
+                const isSelected = (selection.type === 'container' && selection.id === c.id);
+                containersHTML += `
+                    <g class="container-group ${isSelected ? 'selected' : ''}" data-id="${c.id}" transform="translate(${c.x}, ${c.y})">
+                        <rect class="container-rect" width="${c.w}" height="${c.h}" />
+                        <text class="container-name" x="12" y="24">${c.name}</text>
+                        <rect class="resize-handle" x="${c.w - 14}" y="${c.h - 14}" width="14" height="14" rx="2" />
+                    </g>
+                `;
+            });
+            containersLayer.innerHTML = containersHTML;
+
+            // 2. Render Links (Middle Layer)
+            let linksHTML = '';
+            links.forEach(link => {
+                const source = nodes.find(n => n.id === link.source);
+                const target = nodes.find(n => n.id === link.target);
+                if (source && target) {
+                    const x1 = source.x + nodeWidth / 2;
+                    const y1 = source.y + nodeHeight / 2;
+                    const x2 = target.x + nodeWidth / 2;
+                    const y2 = target.y + nodeHeight / 2;
+                    const isSelected = (selection.type === 'link' && selection.id === link.id);
+                    const pathData = getPath(x1, y1, x2, y2);
+                    
+                    // Invisible thick hitbox followed by the visible path
+                    linksHTML += `
+                        <path class="link-hitbox ${isSelected ? 'selected' : ''}" d="${pathData}" data-id="${link.id}" />
+                        <path class="link-path" d="${pathData}" />
+                    `;
+                }
+            });
+            linksLayer.innerHTML = linksHTML;
+
+            // 3. Render Nodes (Front Layer)
+            let nodesHTML = '';
+            nodes.forEach(node => {
+                const isSelected = (selection.type === 'node' && selection.id === node.id);
+                const style = typeStyles[node.type];
+                nodesHTML += `
+                    <g class="node-group ${isSelected ? 'selected' : ''}" data-id="${node.id}" transform="translate(${node.x}, ${node.y})">
+                        <rect class="node-rect" width="${nodeWidth}" height="${nodeHeight}" />
+                        ${style.svg}
+                        <text class="node-name" x="${nodeWidth/2}" y="65">${node.name}</text>
+                    </g>
+                `;
+            });
+            nodesLayer.innerHTML = nodesHTML;
+        }
+
+        // Initialize empty board
+        render();
+    </script>
+</body>
+</html>
