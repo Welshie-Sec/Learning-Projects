@@ -17,7 +17,29 @@ Wazuh 4.14.5
 
 Ubuntu 24.04
 
-OWASP Juiceshop v20? I think? I'll find out when I do the docker pull
+(Need a target VM, OWASP Juice Shop needs more time to get web access logs pulled into Wazuh)
 
 ##Current Spot
-I have Wazuh up, and the docker host with juiceshop running, but I'm trying to figure out container application log collection
+I have Wazuh up, and the docker host with juiceshop running, but I'm trying to figure out container application log collection.
+
+Hmmm, so Im getting normal access logs from a test nginx, but Juice Shop doesn't like outputting any form of access log. I may have to consider another option for testing. 
+I tried another docker image, with the same affect so I need to figure out what to do next with that. But hey I at least know Wazuh is up and running, and I did some copy and pasting of decoders and rulesets, so for Wazuh at least it's been a solid start I think. I can definately work with this at least and it shouldn't take too long to get a target going that plays nice for demo purposes.
+
+###Day 1 Completion
+So things completed for day 1 6/16/2026
+1. Got a basic Wazuh virtual machine going.
+2. Setup a basic Docker host
+3. Installed Wazuh agent on Docker host
+4. Modified configuration files on agent and manager to collect some docker logs.
+5. Troubleshooted some potential example docker images to use for examples.
+6. Applied decoder sets for docker logs that are formatted to syslog setup.
+7. Applied ruleset for alerting to "GET" request from docker container derived logs.
+
+image
+
+image
+
+image
+
+
+
