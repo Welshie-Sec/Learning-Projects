@@ -10,3 +10,14 @@ Okay, so current working idea is to do this.
 5. Pull up a Kali and start throwing things at it. Think I'll primarily use burpsuite.
 
 Not sure yet what to record but speaking may cause issues elsewhere so I'm not sure the proper way to convey information.
+
+##Versions of things
+
+Wazuh 4.14.5
+
+Ubuntu 24.04
+
+OWASP Juiceshop v20? I think? I'll find out when I do the docker pull
+
+##Current Spot
+I have Wazuh up, and the docker host with juiceshop running, but I'm trying to figure out container application log collection
