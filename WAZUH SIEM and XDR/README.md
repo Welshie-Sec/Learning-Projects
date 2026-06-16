@@ -19,6 +19,10 @@ Ubuntu 24.04
 
 (Need a target VM, OWASP Juice Shop needs more time to get web access logs pulled into Wazuh)
 
+This is the intended layout I'm looking at working with.
+
+<img width="957" height="464" alt="SimpleWazuhSetup" src="https://github.com/user-attachments/assets/cc5bc05d-f174-4f30-809b-68370803bc8e" />
+
 ##Current Spot
 I have Wazuh up, and the docker host with juiceshop running, but I'm trying to figure out container application log collection.
 
@@ -35,11 +39,14 @@ So things completed for day 1 6/16/2026
 6. Applied decoder sets for docker logs that are formatted to syslog setup.
 7. Applied ruleset for alerting to "GET" request from docker container derived logs.
 
-image
+<img width="868" height="674" alt="wazuhLogin" src="https://github.com/user-attachments/assets/9692a022-b2e2-4091-b83d-f0e1fd80c912" />
 
-image
+<img width="1902" height="938" alt="wazuhdecoder" src="https://github.com/user-attachments/assets/81b619c4-2ee6-499a-8834-423f40a1d1bd" />
 
-image
+<img width="1913" height="903" alt="wazuhrules" src="https://github.com/user-attachments/assets/ad4d13be-aef4-4db4-9841-eb60d8394db7" />
+
+<img width="1911" height="1031" alt="ThreatHunting_Dashboard" src="https://github.com/user-attachments/assets/49a6892a-8bf5-434a-88a0-821f562bfdfb" />
+
 
 
 
