@@ -8,3 +8,5 @@ Okay, so current working idea is to do this.
 3. Install the Wazuh agent on the linux machine.
 4. Test Wazuh functionality, make sure what it's seeing works.
 5. Pull up a Kali and start throwing things at it. Think I'll primarily use burpsuite.
+
+Not sure yet what to record but speaking may cause issues elsewhere so I'm not sure the proper way to convey information.
