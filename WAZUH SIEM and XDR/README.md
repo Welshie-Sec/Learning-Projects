@@ -1,6 +1,6 @@
 This will be the area for any WAZUH related project/lab setups. This is still in the early stages of concept.
 
-##Current Working Idea##
+##Current Working Idea
 
 Okay, so current working idea is to do this.
 1. Use the Wazuh OVA, cut down on some of the initial setup.
