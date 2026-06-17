@@ -7,7 +7,7 @@ I'm not going to include anything that would cause issues with the organizations
 I'm building out and trying to figure out what to do with some of these projects, so I'll keep this updated where I can. Currently I'm still braintstorming, figuring out what should be worked on/shown.
 
 ## WAZUH SIEM and XDR
-Not started (Concept)
+I got most of the lab setup at this point, just need a app or vuln service that sends logs from a docker container to Wazuh so I can do alert rules and explore decoders.
 ## Splunk and Splunk Accessories
 Not started (Concept)
 ## OpenVAS
