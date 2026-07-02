@@ -58,5 +58,52 @@ So things completed for day 1 6/16/2026
 <img width="1911" height="1031" alt="ThreatHunting_Dashboard" src="https://github.com/user-attachments/assets/49a6892a-8bf5-434a-88a0-821f562bfdfb" />
 
 
+### Day 2 Completion
 
+A little shorter of an entry.
+1. Started using docker-compose and bringing up basic nginx container that feeds out it's access and error logs and using it as a reverse proxy for JuiceShop as a test.
+2. I can see most events coming from the access logs, but it seems like Wazuh isn't doing anything with 200 code log entries. Like in the threat hunting it shows 400 and 500 base errors.
+3. Since I'm not completely familiar with what Wazuh would alert from the get go I wanted to run some basic things that I feel it could alert on, but with mixed results.
+4. One issue I ran into when doing something basic like using dirbuster is that dirbuster was totally freaking out about getting responses back, so I need to test if 
 
+#### Basic docker-compose.yml
+
+```yaml
+version: '3'
+services:
+  juiceshop:
+    image: bkimminich/juice-shop
+    container_name: juiceshop
+    expose:
+      - "3000"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-logs:/var/log/nginx
+    depends_on:
+      - juiceshop
+
+```
+
+#### nginx.conf
+
+```nginx
+events {}
+
+http {
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://juiceshop:3000;
+            proxy_set_header HOST $http_host;
+            proxy_set_header X-REAL-IP $remote_addr;
+        }
+    }
+}
+```
