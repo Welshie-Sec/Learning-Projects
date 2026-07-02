@@ -68,6 +68,9 @@ A little shorter of an entry. 6/27/2026
 4. One issue I ran into when doing something basic like using dirbuster is that dirbuster was totally freaking out about getting responses back, so I need to test if it's because of the reverse proxy setup or if dirbuster is not happy.
 5. Burpsuite intruder worked fine with the expected outputs on non-existant directories. I'll probably grab a request file from burp and throw it through wfuzz later for a loud directory enumeration.
 
+<img width="1901" height="874" alt="ThreatHunting_Showing400Codes" src="https://github.com/user-attachments/assets/8844e6d2-682b-40b3-b13f-5cd34cd3b4e2" />
+*Showing pickups of nginx proxy logs*
+
 #### Basic docker-compose.yml
 
 ```yaml
