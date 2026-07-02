@@ -60,11 +60,13 @@ So things completed for day 1 6/16/2026
 
 ### Day 2 Completion
 
-A little shorter of an entry.
+A little shorter of an entry. 6/27/2026
+
 1. Started using docker-compose and bringing up basic nginx container that feeds out it's access and error logs and using it as a reverse proxy for JuiceShop as a test.
 2. I can see most events coming from the access logs, but it seems like Wazuh isn't doing anything with 200 code log entries. Like in the threat hunting it shows 400 and 500 base errors.
 3. Since I'm not completely familiar with what Wazuh would alert from the get go I wanted to run some basic things that I feel it could alert on, but with mixed results.
-4. One issue I ran into when doing something basic like using dirbuster is that dirbuster was totally freaking out about getting responses back, so I need to test if 
+4. One issue I ran into when doing something basic like using dirbuster is that dirbuster was totally freaking out about getting responses back, so I need to test if it's because of the reverse proxy setup or if dirbuster is not happy.
+5. Burpsuite intruder worked fine with the expected outputs on non-existant directories. I'll probably grab a request file from burp and throw it through wfuzz later for a loud directory enumeration.
 
 #### Basic docker-compose.yml
 
