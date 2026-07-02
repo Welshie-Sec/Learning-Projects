@@ -25,6 +25,8 @@ Not sure yet what to record but speaking may cause issues elsewhere so I'm not s
 
 This is the intended layout I'm looking at working with.
 
+<img width="957" height="464" alt="SimpleWazuhSetup" src="https://github.com/user-attachments/assets/bf594e6b-5c1a-4bca-bac0-2c84f34ac43c" />****
+
 ---
 
 ## Current Spot
@@ -51,12 +53,19 @@ So things completed for day 1 6/16/2026
 
 <img width="868" height="674" alt="wazuhLogin" src="https://github.com/user-attachments/assets/9692a022-b2e2-4091-b83d-f0e1fd80c912" />
 
+*(Wazuh first boot)*
+
 <img width="1902" height="938" alt="wazuhdecoder" src="https://github.com/user-attachments/assets/81b619c4-2ee6-499a-8834-423f40a1d1bd" />
+
+*(Wauzh documentation sample decoder)*
 
 <img width="1913" height="903" alt="wazuhrules" src="https://github.com/user-attachments/assets/ad4d13be-aef4-4db4-9841-eb60d8394db7" />
 
+*(Wazuh documentation sample rule)*
+
 <img width="1911" height="1031" alt="ThreatHunting_Dashboard" src="https://github.com/user-attachments/assets/49a6892a-8bf5-434a-88a0-821f562bfdfb" />
 
+*(Wazuh, testing of first docker logs being collected)*
 
 ### Day 2 Completion
 
@@ -69,7 +78,8 @@ A little shorter of an entry. 6/27/2026
 5. Burpsuite intruder worked fine with the expected outputs on non-existant directories. I'll probably grab a request file from burp and throw it through wfuzz later for a loud directory enumeration.
 
 <img width="1901" height="874" alt="ThreatHunting_Showing400Codes" src="https://github.com/user-attachments/assets/8844e6d2-682b-40b3-b13f-5cd34cd3b4e2" />
-*Showing pickups of nginx proxy logs*
+
+*(Showing pickups of nginx proxy logs)*
 
 #### Basic docker-compose.yml
 
