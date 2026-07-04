@@ -14,6 +14,7 @@ Not started (Concept)
 Not started (Concept)
 ## AI?
 Not sure, maybe some tools. Still working on the HackTheBox AI Red-Teaming course.
+I think I got an interesting project. I want to try and automate some ghidra usage like renaming functions and variable names in the code browser. I want to automate all of this.
 ## Cloud!
 Mostly fundamentals training for now. 
 Mostly focused on Azure as Sentinel and Entra feel like they cover a lot of infrastructure.
