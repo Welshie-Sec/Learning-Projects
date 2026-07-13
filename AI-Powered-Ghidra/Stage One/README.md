@@ -74,7 +74,7 @@ We can then check in LM Studio under `Settings -> Integrations` and see if it se
 
 ## Testing the Integration
 
-So to test the usability here, I decided to put it in a tough spot off the start. The file I have open in Ghidra is called "headache," which is a medium retired reversing challenge from HackTheBox, and also one I haven't solved myself yet. Long story short, through the writeup you can see the challenge deals with metamorphic code creation and several anti-debugging layers you have to work through, which is way beyond what I asked the LLM to deal with at the moment. But I started off easy by asking it to write a synopsis of the file and, for bonus points, to give me a potential Sigma rule to look over and judge.
+So to test the usability here, I decided to put it in a tough spot off the start. The file I have open in Ghidra is called "headache," which is a medium retired reversing challenge from HackTheBox, and also one I haven't solved myself yet. Long story short, through the writeup you can see the challenge deals with metamorphic code creation and several anti-debugging layers you have to work through, which is way beyond what I asked the LLM to deal with at the moment. But I started off easy by asking it to write a synopsis of the file and, for bonus points, to give me a potential detection rule to look over and judge.
 
 *[Images here]*
 
@@ -86,7 +86,7 @@ I find the results interesting, but I'm not completely confident in some aspects
 
 * The report is very "Beware, malware" about everything. Like, `mmap` is just memory allocation, so only applying it to ROP chains, code injection, yada yada feels a bit too alarmist.
 * As expected, it didn't really dig too deep on its own, as it didn't seem to try to untwist and get the full picture of what the program is doing.
-* The Sigma rule I'm not well versed in, but it looks like it focused on `ptrace` and just elf binaries in general, which wouldn't be a good addition. I feel like it is more fantasy than a good rule creation. Like it detected native code in `.text`; I feel like that's a much stronger indicator.
+* The rule I'm not well versed in but seems to be a combination of Yara and Sigma, and that was my fault as I told it to make a Sigma rule for something that isn't a log lol, but it looks like it focused on `ptrace` and just elf binaries in general, which wouldn't be a good addition. I feel like it is more fantasy than a good rule creation. Like it detected native code in `.text`; I feel like that's a much stronger indicator.
 
 I did a couple of rounds to practice the prompt engineering and see if it can actually solve the layers and get the flag, but it is not happy at the moment. As I'm currently watching it search bytes for some patterns, it's been looping like this for a while, and I think I'm going to run out of context tokens pretty fast this way (glad I didn't hook this up to a chargeable API yet).
 
