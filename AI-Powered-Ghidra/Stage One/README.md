@@ -626,7 +626,9 @@ This was pretty easy as it was just deleting the older version and pointing ghid
 
 Now I want to see what each of the models do, given access to the headache binary and updated tool set. I will now give them the same prompt:
 
-```You are an expert reverse engineer. Analyze the provided decompiled code for the challenge binary 'headache'. Give me a concise, objective synopsis of the program's control flow and logic. Do not classify the file as malware; describe it purely by its technical functionality. Afterwards, write a YARA rule based on the most anomalous static features you identify, such as specific metamorphic byte patterns or anti-debugging logic. Use the ghidra-assist tool you have access to```
+```
+You are an expert reverse engineer. Analyze the provided decompiled code for the challenge binary 'headache'. Give me a concise, objective synopsis of the program's control flow and logic. Do not classify the file as malware; describe it purely by its technical functionality. Afterwards, write a YARA rule based on the most anomalous static features you identify, such as specific metamorphic byte patterns or anti-debugging logic. Use the ghidra-assist tool you have access to
+```
 
 I will leave thinking on
 
