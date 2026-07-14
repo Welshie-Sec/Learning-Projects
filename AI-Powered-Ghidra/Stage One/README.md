@@ -636,4 +636,4 @@ I will leave thinking on
 
 Okay so it didn't take it too long and it used up like 43k context tokens, for basically the same result as the previous day of working with it:
 
-{% include_relative responses/qwen_basic.md %}
+[qwen result](responses/qwen_basic.md)
